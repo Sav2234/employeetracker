@@ -1,16 +1,17 @@
 const inquirer = require("inquirer")
-const fs = require('fs');
+const connection = require('./db/connection.js');
 
 const allCreation = [];
 
 function startMenu() {
     inquirer.prompt(
+        // "Remove Employee", "Remove Department", "Remove Role", 
         {
             type: "list",
             message: "What would ypu like to do today?",
             name: "action",
-            choices: ["Add Employee", "Add Department", "Add Role", "Nothing"],
-            // "Remove Employee", "Remove Department", "Remove Role", "View ALL employees"
+            choices: ["Add Employee", "Add Department", "Add Role", "Nothing", "View all Roles", "View all Employees", "View all Departments"
+            ]
         }
     ).then(function (response) {
         console.log(response.action)
@@ -42,9 +43,17 @@ function startMenu() {
         //     rmvRole()
         // }
 
-        // else if (response.action === "View ALL Employees") {
-        //     viewAll()
-        // }
+        else if (response.action === "View all Employees") {
+            viewEmp()
+        }
+
+        else if (response.action === "View all Roles") {
+            viewRoles()
+        }
+
+        else if (response.action === "View all Departments") {
+            viewDep()
+        }
     })
 
     function addEmployee() {
@@ -80,7 +89,7 @@ function startMenu() {
             },
         ]).then(response => {
             console.log(response + "Employee Created")
-            allCreation.push(addEmployee)
+            allCreation.push()
             addMore()
         })
     }
@@ -160,22 +169,28 @@ function addMore() {
     })
 }
 
-function Creation() {
-    Generate(allCreation)
-    fs.writeFile("./README.md", JSON.stringify(allCreation), function (err) {
-        if (err) {
-            return console.log(err);
-        }
-        console.log("file written");
+function viewRoles() {
+    connection.query("SELECT * FROM ROLE", function (error, res) {
+        if (error) throw error;
+        console.table(res);
+        startMenu()
     })
 }
 
-function Generate(allCreation){
-    console.log(allCreation)
-    for (let i = 0; i < allCreation.length; i++) {
-        const element = allCreation[i];
-        console.log(element.name)
-    }
+function viewEmp() {
+    connection.query("SELECT * FROM EMPLOYEE", function (error, res) {
+        if (error) throw error;
+        console.table(res);
+        startMenu()
+    })
+}
+
+function viewDep() {
+    connection.query("SELECT * FROM DEPARTMENT", function (error, res) {
+        if (error) throw error;
+        console.table(res);
+        startMenu()
+    })
 }
 
 startMenu();
