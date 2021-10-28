@@ -10,7 +10,7 @@ function startMenu() {
             type: "list",
             message: "What would you like to do today?",
             name: "action",
-            choices: ["Add Employee", "Add Department", "Add Role", "View all Roles", "View all Employees", "View all Departments", "Nothing"
+            choices: ["Add Employee", "Add Department", "Add Role", "View all Roles", "View all Employees", "View all Departments", "Remove Employee", "Nothing"
             ]
         }
     ).then(function (response) {
@@ -27,9 +27,9 @@ function startMenu() {
             addRole()
         }
 
-        // else if (response.action === "Remove Employee") {
-        //     rmvEmployee()
-        // }
+        else if (response.action === "Remove Employee") {
+            rmvEmployee()
+        }
 
         // else if (response.action === "Remove Department") {
         //     rmvDepartment()
@@ -148,6 +148,33 @@ function startMenu() {
                 // console.table(res);
                 addMore()
             })
+        })
+    }
+
+    function rmvEmployee() {
+        inquirer.prompt([
+            {
+                type: "input",
+                name: "id",
+                message: "What is the ID of the employee you would like to remove?",
+            },
+
+
+        ]).then(response => {
+            console.log(response + "Employee Deleted")
+
+            connection.query(`DELETE FROM employee WHERE id = (?)`, [response.id], (err, result) => {
+                if (err) {
+                  console.log(err);
+                }
+                console.log(result);
+              });
+              
+              // Query database
+              connection.query('SELECT * FROM EMPLOYEE', function (err, results) {
+                console.log(results);
+                startMenu()
+              });
         })
     }
 
