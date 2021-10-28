@@ -8,7 +8,7 @@ function startMenu() {
         // "Remove Employee", "Remove Department", "Remove Role", 
         {
             type: "list",
-            message: "What would ypu like to do today?",
+            message: "What would you like to do today?",
             name: "action",
             choices: ["Add Employee", "Add Department", "Add Role", "View all Roles", "View all Employees", "View all Departments", "Nothing"
             ]
@@ -71,12 +71,6 @@ function startMenu() {
 
             {
                 type: "input",
-                name: "id",
-                message: "What is the employee's ID?",
-            },
-
-            {
-                type: "input",
                 name: "role_id",
                 message: "What is the employee's role ID?",
             },
@@ -84,12 +78,16 @@ function startMenu() {
             {
                 type: "input",
                 name: "manager_id",
-                message: "Does the employee have a manager ID? If so please enter a value. If not, type 'null'.",
+                message: "Does the employee have a manager ID? If so please enter a value.",
             },
         ]).then(response => {
             console.log(response + "Employee Created")
-            allCreation.push()
-            addMore()
+            connection.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)`, [response.first_name, response.last_name, response.role_id, response.manager_id], function (error, res) {
+                if (error) throw error;
+                // console.table(res);
+                addMore()
+            })
+            // addMore()
         })
     }
 
@@ -110,8 +108,11 @@ function startMenu() {
 
         ]).then(response => {
             console.log(response + "Department Created")
-            allCreation.push(addDepartment)
-            addMore()
+            connection.query(`INSERT INTO department (name, id) VALUES (?, ?)`, [response.name, response.id], function (error, res) {
+                if (error) throw error;
+                // console.table(res);
+                addMore()
+            })
         })
     }
 
@@ -142,8 +143,40 @@ function startMenu() {
             },
         ]).then(response => {
             console.log(response + "Role Created")
-            allCreation.push(addRole)
-            addMore()
+            connection.query(`INSERT INTO department (name, id) VALUES (?, ?, ?, ?)`, [response.id, response.name, response.salary, response.department_id], function (error, res) {
+                if (error) throw error
+                // console.table(res);
+                addMore()
+            })
+        })
+    }
+
+    function exitMenu() {
+        console.log("Now ending process")
+        process.exit()
+    }
+
+    function viewRoles() {
+        connection.query("SELECT * FROM ROLE", function (error, res) {
+            if (error) throw error;
+            console.table(res);
+            startMenu()
+        })
+    }
+
+    function viewEmp() {
+        connection.query("SELECT * FROM EMPLOYEE", function (error, res) {
+            if (error) throw error;
+            console.table(res);
+            startMenu()
+        })
+    }
+
+    function viewDep() {
+        connection.query("SELECT * FROM DEPARTMENT", function (error, res) {
+            if (error) throw error;
+            console.table(res);
+            startMenu()
         })
     }
 
@@ -163,39 +196,12 @@ function addMore() {
         }
 
         else if (response.more === "No") {
+            console.log("Ending process")
             exitMenu()
         }
     })
 }
 
-function exitMenu() {
-    console.log("Now ending process")
-    process.exit()
-}
-
-function viewRoles() {
-    connection.query("SELECT * FROM ROLE", function (error, res) {
-        if (error) throw error;
-        console.table(res);
-        startMenu()
-    })
-}
-
-function viewEmp() {
-    connection.query("SELECT * FROM EMPLOYEE", function (error, res) {
-        if (error) throw error;
-        console.table(res);
-        startMenu()
-    })
-}
-
-function viewDep() {
-    connection.query("SELECT * FROM DEPARTMENT", function (error, res) {
-        if (error) throw error;
-        console.table(res);
-        startMenu()
-    })
-}
 
 
 startMenu();
