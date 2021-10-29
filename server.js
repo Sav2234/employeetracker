@@ -117,11 +117,6 @@ function startMenu() {
 
     function addRole() {
         inquirer.prompt([
-            {
-                type: "input",
-                name: "id",
-                message: "Give the role an ID",
-            },
 
             {
                 type: "input",
@@ -142,7 +137,7 @@ function startMenu() {
             },
         ]).then(response => {
             console.log(response + "Role Created")
-            connection.query(`INSERT INTO department (name, id) VALUES (?, ?, ?, ?)`, [response.id, response.name, response.salary, response.department_id], function (error, res) {
+            connection.query(`INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)`, [response.title, response.salary, response.department_id], function (error, res) {
                 if (error) throw error
                 // console.table(res);
                 addMore()
@@ -231,10 +226,6 @@ function startMenu() {
         })
     }
 
-    function exitMenu() {
-        console.log("Now ending process")
-        process.exit()
-    }
 
     function viewRoles() {
         connection.query("SELECT * FROM ROLE", function (error, res) {
@@ -260,6 +251,10 @@ function startMenu() {
         })
     }
 
+}
+function exitMenu() {
+    console.log("Now ending process")
+    process.exit()
 }
 
 function addMore() {
