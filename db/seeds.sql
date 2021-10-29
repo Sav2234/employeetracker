@@ -11,10 +11,10 @@ VALUES ("Senior Engineer", 100000, 1),
 ("Chief Officer", 46928, 4);
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Sav", "Elsey", 1, null),
-("Sara", "de Leon", 2, null),
-("Ayano", "Aishi", 3, null),
-("Luke", "Skywalker", 4, null);
+VALUES ("Sav", "Elsey", 1, 1),
+("Sara", "de Leon", 2, 2),
+("Ayano", "Aishi", 3, 3),
+("Luke", "Skywalker", 4, 4);
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES ("NotSav", "Yee", 1, 1),

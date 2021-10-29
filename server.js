@@ -1,3 +1,4 @@
+const { restoreDefaultPrompts } = require("inquirer");
 const inquirer = require("inquirer")
 const connection = require('./db/connection.js');
 
@@ -80,10 +81,10 @@ function startMenu() {
                 message: "Does the employee have a manager ID? If so please enter a value.",
             },
         ]).then(response => {
-            console.log(response + "Employee Created")
+            console.log(response)
             connection.query(`INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)`, [response.first_name, response.last_name, response.role_id, response.manager_id], function (error, res) {
                 if (error) throw error;
-                // console.table(res);
+                console.table(res);
                 addMore()
             })
             // addMore()
@@ -98,16 +99,10 @@ function startMenu() {
                 message: "What would you like to call the department?",
             },
 
-            {
-                type: "input",
-                name: "id",
-                message: "What is the department's ID?",
-            },
-
 
         ]).then(response => {
-            console.log(response + "Department Created")
-            connection.query(`INSERT INTO department (name, id) VALUES (?, ?)`, [response.name, response.id], function (error, res) {
+            console.log("Department Created", response)
+            connection.query(`INSERT INTO department (name) VALUES (?)`, [response.name], function (error, res) {
                 if (error) throw error;
                 // console.table(res);
                 addMore()
@@ -136,7 +131,7 @@ function startMenu() {
                 message: "What is the corresponding ID of the department for this role?",
             },
         ]).then(response => {
-            console.log(response + "Role Created")
+            console.log("Role Created", response)
             connection.query(`INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)`, [response.title, response.salary, response.department_id], function (error, res) {
                 if (error) throw error
                 // console.table(res);
