@@ -5,12 +5,11 @@ const allCreation = [];
 
 function startMenu() {
     inquirer.prompt(
-        // "Remove Employee", "Remove Department", "Remove Role", 
         {
             type: "list",
             message: "What would you like to do today?",
             name: "action",
-            choices: ["Add Employee", "Add Department", "Add Role", "View all Roles", "View all Employees", "View all Departments", "Remove Employee", "Nothing"
+            choices: ["Add Employee", "Add Department", "Add Role", "View all Roles", "View all Employees", "View all Departments", "Remove Employee", "Remove Role", "Remove Department", "Nothing"
             ]
         }
     ).then(function (response) {
@@ -31,13 +30,13 @@ function startMenu() {
             rmvEmployee()
         }
 
-        // else if (response.action === "Remove Department") {
-        //     rmvDepartment()
-        // }
+        else if (response.action === "Remove Department") {
+            rmvDepartment()
+        }
 
-        // else if (response.action === "Remove Role") {
-        //     rmvRole()
-        // }
+        else if (response.action === "Remove Role") {
+            rmvRole()
+        }
 
         else if (response.action === "View all Employees") {
             viewEmp()
@@ -165,16 +164,70 @@ function startMenu() {
 
             connection.query(`DELETE FROM employee WHERE id = (?)`, [response.id], (err, result) => {
                 if (err) {
-                  console.log(err);
+                    console.log(err);
                 }
                 console.log(result);
-              });
-              
-              // Query database
-              connection.query('SELECT * FROM EMPLOYEE', function (err, results) {
+            });
+
+            // Query database
+            connection.query('SELECT * FROM EMPLOYEE', function (err, results) {
                 console.log(results);
-                startMenu()
-              });
+                addMore()
+            });
+        })
+    }
+
+    function rmvRole() {
+        inquirer.prompt([
+            {
+                type: "input",
+                name: "id",
+                message: "What is the ID of the role you would like to remove?",
+            },
+
+
+        ]).then(response => {
+            console.log(response + "Role Deleted")
+
+            connection.query(`DELETE FROM role WHERE id = (?)`, [response.id], (err, result) => {
+                if (err) {
+                    console.log(err);
+                }
+                console.log(result);
+            });
+
+            // Query database
+            connection.query('SELECT * FROM ROLE', function (err, results) {
+                console.log(results);
+                addMore()
+            });
+        })
+    }
+
+    function rmvDepartment() {
+        inquirer.prompt([
+            {
+                type: "input",
+                name: "id",
+                message: "What is the ID of the department you would like to remove?",
+            },
+
+
+        ]).then(response => {
+            console.log(response + "Department Deleted")
+
+            connection.query(`DELETE FROM department WHERE id = (?)`, [response.id], (err, result) => {
+                if (err) {
+                    console.log(err);
+                }
+                console.log(result);
+            });
+
+            // Query database
+            connection.query('SELECT * FROM DEPARTMENT', function (err, results) {
+                console.log(results);
+                addMore()
+            });
         })
     }
 
